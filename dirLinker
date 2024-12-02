@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Funktion zur Erstellung der versteckten Datei mit dem 'cd'-Befehl
+create_hidden_cd_script() {
+  local target_path="$1"
+  local current_path="$(pwd)"
+  local file_prefix="#!/bin/bash\n"
+  
+  # Versteckte Datei im aktuellen Verzeichnis erstellen
+  echo -e "${file_prefix}cd \"$target_path\"" > .change_to_target
+  chmod +x .change_to_target
+  
+  # Versteckte Datei im Zielverzeichnis erstellen
+  echo -e "${file_prefix}cd \"$current_path\"" > "$target_path/.change_to_current"
+  chmod +x "$target_path/.change_to_current"
+  
+  echo "Versteckte Dateien wurden erfolgreich erstellt:"
+  echo "- .change_to_target im aktuellen Verzeichnis"
+  echo "- .change_to_current im Zielverzeichnis ($target_path)"
+}
+
+# Hauptprogramm
+if [[ "$1" == "-c" && -n "$2" ]]; then
+  create_hidden_cd_script "$2"
+else
+  echo "Verwendung: $0 -c <pfad>"
+fi
